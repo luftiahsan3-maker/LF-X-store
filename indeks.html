@@ -1,0 +1,315 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L-FX Store - Toko Pakaian Online Terpercaya</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        },
+                        dark: '#0f172a'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .modal-active {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 text-white text-xs sm:text-sm py-2 px-4 text-center font-medium">
+        <div class="max-w-7xl mx-auto flex justify-between items-center flex-wrap gap-2">
+            <div class="flex items-center space-x-4 mx-auto sm:mx-0">
+                <span><i class="fa-solid fa-truck-fast mr-1 text-emerald-400"></i> Pengiriman Ke Seluruh Indonesia</span>
+                <span class="hidden md:inline">|</span>
+                <span class="hidden md:inline"><i class="fa-solid fa-shield-halved mr-1 text-emerald-400"></i> Garansi Produk Original</span>
+            </div>
+            <div class="flex items-center space-x-4 mx-auto sm:mx-0 text-slate-300">
+                <a href="https://wa.me/6283845960942" target="_blank" class="hover:text-emerald-400 transition flex items-center gap-1">
+                    <i class="fa-brands fa-whatsapp text-emerald-400"></i> 0838-4596-0942
+                </a>
+                <a href="https://instagram.com/lufti_ahsan" target="_blank" class="hover:text-pink-400 transition flex items-center gap-1">
+                    <i class="fa-brands fa-instagram text-pink-400"></i> @lufti_ahsan
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="bg-white/95 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Brand Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-slate-900 text-white rounded-xl flex items-center justify-center font-black text-xl shadow-md border-2 border-emerald-500">
+                        L
+                    </div>
+                    <div>
+                        <a href="#" class="text-2xl font-extrabold tracking-tight text-slate-900 flex items-center gap-1">
+                            L-FX <span class="text-emerald-600">STORE</span>
+                        </a>
+                        <p class="text-[10px] text-slate-500 tracking-widest uppercase font-semibold">Fashion Apparel & Style</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Search Bar -->
+                <div class="hidden md:flex flex-1 max-w-md mx-8 relative">
+                    <input type="text" id="searchInput" placeholder="Cari baju, merk, atau bahan..." 
+                           class="w-full bg-slate-100 border border-slate-200 rounded-full py-2.5 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center space-x-3 sm:space-x-4">
+                    <!-- Input Stok Baru Button (Admin) -->
+                    <button id="openAddProductBtn" class="bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold px-3 sm:px-4 py-2.5 rounded-xl shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle text-emerald-400"></i>
+                        <span class="hidden sm:inline">Input Stok Baru</span>
+                    </button>
+
+                    <!-- Cart Button -->
+                    <button id="openCartBtn" class="relative bg-emerald-50 hover:bg-emerald-100 text-emerald-700 p-2.5 rounded-xl transition flex items-center justify-center">
+                        <i class="fa-solid fa-bag-shopping text-xl"></i>
+                        <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-emerald-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Search Bar Sub-header -->
+        <div class="md:hidden px-4 pb-3">
+            <div class="relative">
+                <input type="text" id="mobileSearchInput" placeholder="Cari baju, merk..." 
+                       class="w-full bg-slate-100 border border-slate-200 rounded-lg py-2 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Body -->
+    <main class="flex-grow">
+        
+        <!-- SECTION 1: HERO PROMO BANNER (PROMO PALING ATAS / ETALASE DEPAN) -->
+        <section class="bg-slate-900 text-white py-8 md:py-12 relative overflow-hidden">
+            <!-- Background Decorative Gradients -->
+            <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-10 -top-10 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-8 mb-8">
+                    <div>
+                        <div class="inline-flex items-center gap-2 bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-semibold px-3 py-1 rounded-full mb-3">
+                            <i class="fa-solid fa-fire text-amber-400 animate-pulse"></i> ETALASE PROMO SPESIAL HARI INI
+                        </div>
+                        <h1 class="text-2xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight">
+                            Koleksi Trendy & Stylist <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">Keluarga Indonesia</span>
+                        </h1>
+                        <p class="text-slate-300 text-xs sm:text-base mt-2 max-w-xl">
+                            Dapatkan penawaran harga spesial untuk Pria, Wanita, Dewasa & Anak. Stok terbatas dengan jaminan kualitas bahan terbaik!
+                        </p>
+                    </div>
+
+                    <!-- Quick Contact Badges -->
+                    <div class="flex flex-wrap gap-3 bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 backdrop-blur">
+                        <div class="text-xs">
+                            <p class="text-slate-400 font-medium">Layanan Pelanggan:</p>
+                            <p class="font-bold text-emerald-400 flex items-center gap-1 mt-0.5"><i class="fa-brands fa-whatsapp"></i> 0838-4596-0942</p>
+                            <p class="font-bold text-pink-400 flex items-center gap-1 mt-0.5"><i class="fa-brands fa-instagram"></i> @lufti_ahsan</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured Promo Products Carousel/Grid (Top Shelf) -->
+                <div id="promoContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Dynamic promo items inserted via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: CATALOG FILTER & MAIN CATALOG -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            
+            <!-- Section Title & Filter Controls -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+                <div>
+                    <h2 class="text-2xl font-black text-slate-900 tracking-tight">Katalog Produk Utama</h2>
+                    <p class="text-slate-500 text-sm">Pilih pakaian berkualitas terbaik sesuai selera Anda</p>
+                </div>
+
+                <!-- Category Pills Filter -->
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-2 md:pb-0 scrollbar-none" id="categoryFilterContainer">
+                    <button onclick="setCategoryFilter('Semua')" class="cat-btn active bg-slate-900 text-white text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap transition">Semua</button>
+                    <button onclick="setCategoryFilter('Anak')" class="cat-btn bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap transition">Anak</button>
+                    <button onclick="setCategoryFilter('Dewasa')" class="cat-btn bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap transition">Dewasa</button>
+                    <button onclick="setCategoryFilter('Pria')" class="cat-btn bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap transition">Pria</button>
+                    <button onclick="setCategoryFilter('Wanita')" class="cat-btn bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap transition">Wanita</button>
+                </div>
+            </div>
+
+            <!-- Brand Filter Dropdown & Status Bar -->
+            <div class="flex flex-wrap items-center justify-between gap-4 py-4 mb-4">
+                <div class="flex items-center space-x-2 text-xs text-slate-600">
+                    <span>Menampilkan <strong id="productCount" class="text-slate-900">0</strong> Produk</span>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <label for="brandFilter" class="text-xs font-semibold text-slate-600">Filter Merk:</label>
+                    <select id="brandFilter" onchange="applyFilters()" class="bg-white border border-slate-200 text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <option value="Semua">Semua Merk</option>
+                        <!-- Dynamic brand options via JS -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Main Product Grid -->
+            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Dynamic products rendered here -->
+            </div>
+
+            <!-- Empty State Notice -->
+            <div id="emptyState" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300 mt-4">
+                <i class="fa-solid fa-box-open text-4xl text-slate-300 mb-3"></i>
+                <h3 class="text-lg font-bold text-slate-700">Produk Tidak Ditemukan</h3>
+                <p class="text-slate-400 text-sm mt-1">Coba sesuaikan kata kunci pencarian atau filter kategori Anda.</p>
+                <button onclick="resetFilters()" class="mt-4 bg-emerald-600 text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-emerald-700 transition">Reset Filter</button>
+            </div>
+        </section>
+
+        <!-- SECTION 3: METODE PEMBAYARAN & KEUNGGULAN TOKO -->
+        <section class="bg-slate-100 py-10 border-t border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h3 class="text-center text-xs font-extrabold uppercase text-slate-400 tracking-wider mb-6">Pilihan Metode Pembayaran Resmi</h3>
+                <div class="flex flex-wrap justify-center items-center gap-4 sm:gap-8 opacity-80">
+                    <div class="bg-white px-4 py-2 rounded-lg border border-slate-200 font-bold text-xs text-slate-700 flex items-center gap-1.5">
+                        <i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> COD (Bayar di Tempat)
+                    </div>
+                    <div class="bg-white px-4 py-2 rounded-lg border border-slate-200 font-bold text-xs text-slate-700 flex items-center gap-1.5">
+                        <i class="fa-solid fa-money-bill-wave text-green-600"></i> Cash / Tunai
+                    </div>
+                    <div class="bg-white px-4 py-2 rounded-lg border border-slate-200 font-bold text-xs text-slate-700 flex items-center gap-1.5">
+                        <i class="fa-solid fa-calculator text-indigo-600"></i> Angsuran / Cicilan
+                    </div>
+                    <div class="bg-white px-4 py-2 rounded-lg border border-slate-200 font-bold text-xs text-slate-700 flex items-center gap-1.5">
+                        <i class="fa-solid fa-qrcode text-red-600"></i> QRIS (Scan Instan)
+                    </div>
+                    <div class="bg-white px-4 py-2 rounded-lg border border-slate-200 font-bold text-xs text-slate-700">
+                        Transfer Bank: <span class="text-blue-600 font-black">BRI</span> | <span class="text-blue-800 font-black">BCA</span> | <span class="text-teal-600 font-black">BSI</span>
+                    </div>
+                    <div class="bg-white px-4 py-2 rounded-lg border border-slate-200 font-bold text-xs text-slate-700">
+                        E-Wallet: <span class="text-blue-500">DANA</span> | <span class="text-blue-600">GoPay</span> | <span class="text-purple-600">OVO</span> | <span class="text-orange-600">ShopeePay</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-white border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-3">
+                        <div class="w-8 h-8 bg-emerald-500 text-slate-900 rounded-lg flex items-center justify-center font-black">L</div>
+                        <span class="text-xl font-bold tracking-tight">L-FX STORE</span>
+                    </div>
+                    <p class="text-slate-400 text-xs leading-relaxed">
+                        Pusat pakaian berkualitas tinggi untuk anak, dewasa, pria, dan wanita. Belanja aman, cepat, dan nyaman dengan berbagai opsi pembayaran.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-emerald-400 uppercase tracking-wider mb-3">Kontak Resmi Toko</h4>
+                    <ul class="text-xs text-slate-300 space-y-2">
+                        <li><i class="fa-brands fa-whatsapp text-emerald-400 w-5"></i> WhatsApp: <a href="https://wa.me/6283845960942" class="hover:underline">0838-4596-0942</a></li>
+                        <li><i class="fa-brands fa-instagram text-pink-400 w-5"></i> Instagram: <a href="https://instagram.com/lufti_ahsan" class="hover:underline">@lufti_ahsan</a></li>
+                        <li><i class="fa-solid fa-location-dot text-red-400 w-5"></i> Layanan Pengiriman Seluruh Indonesia</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-emerald-400 uppercase tracking-wider mb-3">Metode Pembayaran</h4>
+                    <p class="text-xs text-slate-400 mb-2">Mendukung COD, Transfer Bank (BRI, BCA, BSI), QRIS, E-Wallet, dan Cicilan.</p>
+                    <div class="text-[11px] text-slate-500">© 2026 L-FX Store. All Rights Reserved.</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL 1: INPUT STOK BARU (ADMIN PANEL) -->
+    <div id="addProductModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-100">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-900 text-white rounded-t-2xl">
+                <h3 class="font-bold text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-boxes-packing text-emerald-400"></i> Input Stok Baru (Admin)
+                </h3>
+                <button onclick="closeModal('addProductModal')" class="text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="addProductForm" onsubmit="handleAddNewProduct(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nama Produk Pakaian</label>
+                    <input type="text" id="newProdName" required placeholder="Contoh: Kemeja Flanel Premium" 
+                           class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Kategori</label>
+                        <select id="newProdCategory" required class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <option value="Pria">Pria</option>
+                            <option value="Wanita">Wanita</option>
+                            <option value="Dewasa">Dewasa</option>
+                            <option value="Anak">Anak</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Merk / Brand</label>
+                        <input type="text" id="newProdBrand" required placeholder="Contoh: L-FX Apparel" 
+                               class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Harga Normal (Rp)</label>
+                        <input type="number" id="newProdPrice" required p
